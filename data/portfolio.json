@@ -1,0 +1,220 @@
+{
+  "personal": {
+    "name": "Mohammad Dava Setiawan",
+    "titleLine1": "Frontend",
+    "titleLine2": "Developer",
+    "statusBadge": "✦ Available for work",
+    "typingTexts": [
+      "Creating clean & modern web experiences",
+      "Building responsive React & Next.js apps",
+      "Transforming ideas into digital reality"
+    ],
+    "bio": "Menciptakan website modern dengan tampilan clean, responsif, dan elegan. Mengubah ide dan desain menjadi pengalaman digital yang menarik dan mudah digunakan.",
+    "coreStack": [
+      "Typescript",
+      "React.js",
+      "Tailwind",
+      "Next.js"
+    ],
+    "exploreText": "↓ explore my work below",
+    "opportunityText": "↗ open to full-time & freelance opportunities",
+    "email": "davasetiawan893@gmail.com",
+    "avatar": "http://localhost:3001/uploads/1784909263361-432730.jpeg"
+  },
+  "about": {
+    "sectionTitle": "Tentang Saya",
+    "description": "Developer Web Full-Stack pemula yang berdedikasi dan memiliki minat tinggi di bidang teknologi. Menguasai fundamental front-end (HTML, CSS, JavaScript) serta memiliki pemahaman yang baik dalam pengembangan backend dan manajemen database. Terbiasa mengelola proyek pengembangan aplikasi dari hulu ke hilir dengan fokus pada fungsionalitas dan efisiensi.",
+    "longBio": "A dedicated entry-level full-stack web developer with a strong interest in technology. Proficient in front-end fundamentals (HTML, CSS, JavaScript) and possesses a solid understanding of backend development and database management. Experienced in managing application development projects from start to finish, with a focus on functionality and efficiency.",
+    "location": "Indonesia",
+    "stats": [
+      {
+        "value": "10+",
+        "label": "Proyek Selesai"
+      },
+      {
+        "value": "2+",
+        "label": "Tahun Pengalaman"
+      },
+      {
+        "value": "5+",
+        "label": "Klien Puas"
+      },
+      {
+        "value": "100%",
+        "label": "Komitmen"
+      }
+    ],
+    "interests": [
+      "Web Development",
+      "UI/UX Design",
+      "Open Source",
+      "Problem Solving"
+    ]
+  },
+  "socials": [
+    {
+      "name": "LinkedIn",
+      "handle": "@linkedin",
+      "url": "https://www.linkedin.com/in/rifqimuhammadaliya/",
+      "icon": "linkedin"
+    },
+    {
+      "name": "Instagram",
+      "handle": "@instagram",
+      "url": "https://www.instagram.com/itsmeikky_12",
+      "icon": "instagram"
+    },
+    {
+      "name": "Youtube",
+      "handle": "@youtube",
+      "url": "https://youtube.com/@zettaajah",
+      "icon": "youtube"
+    },
+    {
+      "name": "Github",
+      "handle": "@github",
+      "url": "https://github.com/RifqiMuhammadAliya12",
+      "icon": "github"
+    },
+    {
+      "name": "TikTok",
+      "handle": "@tiktok",
+      "url": "https://www.tiktok.com/@itsme.ikky_",
+      "icon": "tiktok"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-1",
+      "title": "PDAM Management System",
+      "description": "Platform e-commerce performa tinggi dengan fitur filter katalog real-time, keranjang belanja interaktif, dan antarmuka dark glassmorphic.",
+      "category": "Web App",
+      "tags": [
+        "React.js",
+        "Tailwind CSS",
+        "TypeScript",
+        "HTML"
+      ],
+      "image": "http://localhost:3001/uploads/1784909473803-888597.png",
+      "demoUrl": "https://example.com",
+      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+    },
+    {
+      "id": "proj-2",
+      "title": "Car Rental (Frontend)",
+      "tagline": "Platform visual generasi teks dan konten berbasis kecerdasan buatan.",
+      "description": "Aplikasi web modern yang mengintegrasikan API OpenAI dengan antarmuka yang sangat responsif, cepat, dan intuitif.",
+      "category": "Web App",
+      "tags": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind",
+        "OpenAI"
+      ],
+      "image": "http://localhost:3001/uploads/1784909573984-18513.png",
+      "demoUrl": "https://example.com",
+      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+    },
+    {
+      "id": "proj-3",
+      "title": "Personal Website Portofolio",
+      "description": "Dashboard monitoring analytics real-time dengan grafik interaktif dan kontrol responsif untuk pemantauan data.",
+      "category": "Web App",
+      "tags": [
+        "React",
+        "Chart.js",
+        "Tailwind CSS",
+        "WebSockets"
+      ],
+      "image": "http://localhost:3001/uploads/1784909562399-195445.png",
+      "demoUrl": "https://example.com",
+      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+    }
+  ],
+  "certificates": [
+    {
+      "id": "cert-1",
+      "title": "Frontend Web Developer Expert",
+      "issuer": "Dicoding Indonesia",
+      "date": "2024",
+      "credentialId": "DICODING-FE-2024-998",
+      "link": "https://dicoding.com",
+      "image": ""
+    },
+    {
+      "id": "cert-2",
+      "title": "Fullstack React & Next.js Specialist",
+      "issuer": "Hacktiv8 Academy",
+      "date": "2023",
+      "credentialId": "HACKTIV-REACT-882",
+      "link": "https://hacktiv8.com",
+      "image": ""
+    },
+    {
+      "id": "cert-3",
+      "title": "UI/UX & Web Accessibility Certification",
+      "issuer": "Google Career Certificates",
+      "date": "2023",
+      "credentialId": "GOOGLE-UX-7712",
+      "link": "https://coursera.org",
+      "image": ""
+    }
+  ],
+  "techStack": [
+    {
+      "category": "Frontend Core",
+      "skills": [
+        {
+          "name": "React.js",
+          "level": "Advanced"
+        },
+        {
+          "name": "Next.js",
+          "level": "Advanced"
+        },
+        {
+          "name": "TypeScript",
+          "level": "Intermediate"
+        },
+        {
+          "name": "JavaScript",
+          "level": "Advanced"
+        },
+        {
+          "name": "Tailwind CSS",
+          "level": "Expert"
+        },
+        {
+          "name": "HTML5",
+          "level": "Expert"
+        }
+      ]
+    },
+    {
+      "category": "Tools & Workflow",
+      "skills": [
+        {
+          "name": "Git",
+          "level": "Advanced"
+        },
+        {
+          "name": "Vite",
+          "level": "Advanced"
+        },
+        {
+          "name": "VS Code",
+          "level": "Expert"
+        },
+        {
+          "name": "Figma",
+          "level": "Intermediate"
+        },
+        {
+          "name": "Vercel",
+          "level": "Advanced"
+        }
+      ]
+    }
+  ],
+  "comments": []
+}

@@ -1,24 +1,17 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import defaultData from '../data/defaultPortfolio.json';
 
 const PortfolioContext = createContext();
 
-const STORAGE_KEY = 'vercel_portfolio_custom_data_v2';
+const API_BASE = 'http://localhost:3001';
 
 export const PortfolioProvider = ({ children }) => {
-  const [data, setData] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        return JSON.parse(saved);
-      }
-    } catch (e) {
-      console.error('Error loading saved portfolio data:', e);
-    }
-    return defaultData;
-  });
+  const [data, setData] = useState(defaultData);
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
+  const [serverOnline, setServerOnline] = useState(false);
 
-  // Secret admin mode detector: Enabled only if URL has ?admin=true or secret shortcut Ctrl+Shift+E
+  // Secret admin mode
   const [isAdmin, setIsAdmin] = useState(() => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('admin') === 'true';
@@ -26,7 +19,28 @@ export const PortfolioProvider = ({ children }) => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Secret keyboard shortcut to toggle admin mode for owner
+  const isInitialLoad = React.useRef(true);
+
+  // Load data from server on mount
+  useEffect(() => {
+    fetch(`${API_BASE}/api/portfolio`)
+      .then(res => res.json())
+      .then(serverData => {
+        setData(serverData);
+        setServerOnline(true);
+        // Tandai bahwa initial load selesai setelah state ter-apply
+        setTimeout(() => {
+          isInitialLoad.current = false;
+        }, 100);
+      })
+      .catch(() => {
+        console.warn('API server tidak aktif, menggunakan data default.');
+        setServerOnline(false);
+        isInitialLoad.current = false;
+      });
+  }, []);
+
+  // Secret keyboard shortcut to toggle admin mode
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.ctrlKey && e.shiftKey && e.key === 'E') {
@@ -41,13 +55,35 @@ export const PortfolioProvider = ({ children }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  useEffect(() => {
+  // Save data to server (with debounce)
+  const saveToServer = useCallback(async (newData) => {
+    if (!serverOnline) return;
+    setIsSaving(true);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch (e) {
-      console.error('Error saving portfolio data:', e);
+      const res = await fetch(`${API_BASE}/api/portfolio`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newData)
+      });
+      if (res.ok) {
+        setLastSaved(new Date());
+      }
+    } catch (err) {
+      console.error('Gagal menyimpan ke server:', err);
+    } finally {
+      setIsSaving(false);
     }
-  }, [data]);
+  }, [serverOnline]);
+
+  // Auto-save when data changes by user (bukan saat initial load)
+  useEffect(() => {
+    if (isInitialLoad.current) return;
+
+    const timer = setTimeout(() => {
+      saveToServer(data);
+    }, 500); // debounce 500ms
+    return () => clearTimeout(timer);
+  }, [data, saveToServer]);
 
   const updateField = (pathArray, value) => {
     setData(prev => {
@@ -68,7 +104,39 @@ export const PortfolioProvider = ({ children }) => {
   const resetToDefaults = () => {
     if (window.confirm('Apakah Anda yakin ingin mengembalikan semua data ke setelan awal default?')) {
       setData(defaultData);
-      localStorage.removeItem(STORAGE_KEY);
+    }
+  };
+
+  // Upload image file to server
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const res = await fetch(`${API_BASE}/api/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const result = await res.json();
+      if (result.success) {
+        return `${API_BASE}${result.url}`;
+      } else {
+        alert('Upload gagal: ' + (result.error || 'Unknown error'));
+        return null;
+      }
+    } catch (err) {
+      alert('Gagal upload ke server. Pastikan server berjalan (npm run server).');
+      return null;
+    }
+  };
+
+  // Delete uploaded image from server
+  const deleteImage = async (imageUrl) => {
+    if (!imageUrl || !imageUrl.includes('/uploads/')) return;
+    const filename = imageUrl.split('/uploads/').pop();
+    try {
+      await fetch(`${API_BASE}/api/upload/${filename}`, { method: 'DELETE' });
+    } catch (err) {
+      console.error('Gagal menghapus file:', err);
     }
   };
 
@@ -107,10 +175,15 @@ export const PortfolioProvider = ({ children }) => {
       resetToDefaults,
       exportJSON,
       importJSON,
+      uploadImage,
+      deleteImage,
       isAdmin,
       setIsAdmin,
       isDrawerOpen,
-      setIsDrawerOpen
+      setIsDrawerOpen,
+      isSaving,
+      lastSaved,
+      serverOnline
     }}>
       {children}
     </PortfolioContext.Provider>

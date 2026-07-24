@@ -28,7 +28,9 @@ const SectionHeader = ({ title, count, onAdd, addLabel }) => (
 export const EditDrawer = () => {
   const {
     data, updateField, updateFullData, resetToDefaults,
-    exportJSON, importJSON, isDrawerOpen, setIsDrawerOpen
+    exportJSON, importJSON, uploadImage, deleteImage,
+    isDrawerOpen, setIsDrawerOpen,
+    isSaving, lastSaved, serverOnline
   } = usePortfolio();
 
   const [activeTab, setActiveTab] = useState('personal');
@@ -69,18 +71,23 @@ export const EditDrawer = () => {
     reader.readAsText(file);
   };
 
-  /* ---- Generic image-to-base64 ---- */
-  const readImageAsDataURL = (file, cb) => {
-    const reader = new FileReader();
-    reader.onload = (ev) => cb(ev.target.result);
-    reader.readAsDataURL(file);
-  };
-
-  /* ---- Avatar upload ---- */
-  const handleAvatarUpload = (e) => {
+  /* ---- Avatar upload (ke server) ---- */
+  const handleAvatarUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    readImageAsDataURL(file, (data64) => updateField(['personal', 'avatar'], data64));
+    const url = await uploadImage(file);
+    if (url) {
+      // Hapus foto lama jika ada
+      if (data.personal?.avatar) await deleteImage(data.personal.avatar);
+      updateField(['personal', 'avatar'], url);
+    }
+  };
+
+  /* ---- Delete avatar ---- */
+  const handleDeleteAvatar = async () => {
+    if (!window.confirm('Hapus foto profil?')) return;
+    if (data.personal?.avatar) await deleteImage(data.personal.avatar);
+    updateField(['personal', 'avatar'], '');
   };
 
   /* ---- About Me helpers ---- */
@@ -135,10 +142,22 @@ export const EditDrawer = () => {
     updateField(['projects'], arr);
   };
 
-  const handleProjectImageUpload = (e, idx) => {
+  const handleProjectImageUpload = async (e, idx) => {
     const file = e.target.files[0];
     if (!file) return;
-    readImageAsDataURL(file, (data64) => updateProject(idx, 'image', data64));
+    const url = await uploadImage(file);
+    if (url) {
+      // Hapus gambar lama jika ada
+      const oldImage = data.projects[idx]?.image;
+      if (oldImage) await deleteImage(oldImage);
+      updateProject(idx, 'image', url);
+    }
+  };
+
+  const handleDeleteProjectImage = async (idx) => {
+    const oldImage = data.projects[idx]?.image;
+    if (oldImage) await deleteImage(oldImage);
+    updateProject(idx, 'image', '');
   };
 
   /* ---- Certificate helpers ---- */
@@ -168,10 +187,21 @@ export const EditDrawer = () => {
     updateField(['certificates'], arr);
   };
 
-  const handleCertImageUpload = (e, idx) => {
+  const handleCertImageUpload = async (e, idx) => {
     const file = e.target.files[0];
     if (!file) return;
-    readImageAsDataURL(file, (data64) => updateCert(idx, 'image', data64));
+    const url = await uploadImage(file);
+    if (url) {
+      const oldImage = data.certificates[idx]?.image;
+      if (oldImage) await deleteImage(oldImage);
+      updateCert(idx, 'image', url);
+    }
+  };
+
+  const handleDeleteCertImage = async (idx) => {
+    const oldImage = data.certificates[idx]?.image;
+    if (oldImage) await deleteImage(oldImage);
+    updateCert(idx, 'image', '');
   };
 
   /* ---- Social helpers ---- */
@@ -336,18 +366,30 @@ export const EditDrawer = () => {
                 <img
                   src={data.personal?.avatar || '/profile.png'}
                   alt="Avatar"
-                  style={{ width: '64px', height: '64px', borderRadius: '16px', objectFit: 'cover' }}
+                  style={{ width: '64px', height: '64px', borderRadius: '16px', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.15)' }}
                   onError={(e) => { e.target.src = '/profile.png'; }}
                 />
-                <div>
+                <div style={{ flex: 1 }}>
                   <p style={{ fontSize: '12px', fontWeight: 600, marginBottom: '6px', color: '#FFFFFF' }}>Foto Profil</p>
-                  <label className="glass-pill-container" style={{
-                    padding: '6px 14px', fontSize: '12px', color: '#FFF', cursor: 'pointer',
-                    display: 'inline-flex', alignItems: 'center', gap: '6px'
-                  }}>
-                    <Upload size={13} /> Upload Foto Baru
-                    <input type="file" accept="image/*" onChange={handleAvatarUpload} hidden />
-                  </label>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <label className="glass-pill-container" style={{
+                      padding: '6px 14px', fontSize: '12px', color: '#FFF', cursor: 'pointer',
+                      display: 'inline-flex', alignItems: 'center', gap: '6px'
+                    }}>
+                      <Upload size={13} /> Upload Foto
+                      <input type="file" accept="image/*" onChange={handleAvatarUpload} hidden />
+                    </label>
+                    {data.personal?.avatar && (
+                      <button onClick={handleDeleteAvatar}
+                        style={{
+                          padding: '6px 12px', fontSize: '12px', color: '#EF4444', cursor: 'pointer',
+                          background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
+                          borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '4px'
+                        }}>
+                        <Trash2 size={12} /> Hapus
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -527,17 +569,39 @@ export const EditDrawer = () => {
                   </div>
 
                   {/* Project Image */}
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                      <label style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Gambar Proyek</label>
-                      <label className="mono-tag" style={{ fontSize: '10px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                        <Upload size={10} /> Upload
-                        <input type="file" accept="image/*" onChange={(e) => handleProjectImageUpload(e, pIdx)} hidden />
-                      </label>
+                  <div style={{
+                    padding: '10px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'rgba(255,255,255,0.02)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <label style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>Gambar Proyek</label>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <label className="mono-tag" style={{ fontSize: '10px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <Upload size={10} /> Upload
+                          <input type="file" accept="image/*" onChange={(e) => handleProjectImageUpload(e, pIdx)} hidden />
+                        </label>
+                        {proj.image && (
+                          <button onClick={() => handleDeleteProjectImage(pIdx)}
+                            className="mono-tag" style={{ fontSize: '10px', color: '#EF4444', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                            <Trash2 size={10} /> Hapus
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <input type="text" className="glass-input" placeholder="https://... atau upload di atas"
+                    {proj.image && (
+                      <img src={proj.image} alt="preview"
+                        style={{ width: '100%', maxHeight: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                        onError={(e) => { e.target.style.display='none'; }} />
+                    )}
+                    <input type="text" className="glass-input" placeholder="Atau masukkan URL gambar..."
                       value={proj.image || ''}
-                      onChange={(e) => updateProject(pIdx, 'image', e.target.value)} />
+                      onChange={(e) => updateProject(pIdx, 'image', e.target.value)}
+                      style={{ fontSize: '12px' }} />
                   </div>
                 </div>
               ))}
@@ -568,45 +632,54 @@ export const EditDrawer = () => {
                     </button>
                   </div>
 
-                  {/* Certificate Image upload */}
+                  {/* Certificate Image */}
                   <div style={{
                     padding: '12px',
                     borderRadius: '12px',
                     border: '1px dashed rgba(255,255,255,0.15)',
-                    backgroundColor: 'rgba(255,255,255,0.02)'
+                    backgroundColor: 'rgba(255,255,255,0.02)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       {cert.image ? (
                         <img src={cert.image} alt="cert" style={{
                           width: '80px', height: '56px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)'
-                        }} />
+                        }} onError={(e) => { e.target.style.display='none'; }} />
                       ) : (
                         <div style={{
                           width: '80px', height: '56px', borderRadius: '8px',
                           background: 'rgba(255,255,255,0.05)',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center'
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          flexShrink: 0
                         }}>
                           <Award size={24} style={{ color: 'rgba(255,255,255,0.3)' }} />
                         </div>
                       )}
                       <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: '11px', fontWeight: 600, color: '#FFFFFF', marginBottom: '6px' }}>
-                          Foto Sertifikat
-                        </p>
-                        <label className="glass-pill-container" style={{
-                          padding: '5px 12px', fontSize: '11px', color: '#FFF', cursor: 'pointer',
-                          display: 'inline-flex', alignItems: 'center', gap: '5px'
-                        }}>
-                          <Upload size={11} /> Upload Foto Sertifikat
-                          <input type="file" accept="image/*" onChange={(e) => handleCertImageUpload(e, cIdx)} hidden />
-                        </label>
+                        <p style={{ fontSize: '11px', fontWeight: 600, color: '#FFFFFF', marginBottom: '6px' }}>Foto Sertifikat</p>
+                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                          <label className="glass-pill-container" style={{
+                            padding: '5px 12px', fontSize: '11px', color: '#FFF', cursor: 'pointer',
+                            display: 'inline-flex', alignItems: 'center', gap: '5px'
+                          }}>
+                            <Upload size={11} /> Upload
+                            <input type="file" accept="image/*" onChange={(e) => handleCertImageUpload(e, cIdx)} hidden />
+                          </label>
+                          {cert.image && (
+                            <button onClick={() => handleDeleteCertImage(cIdx)}
+                              style={{
+                                padding: '5px 10px', fontSize: '11px', color: '#EF4444', cursor: 'pointer',
+                                background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
+                                borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '3px'
+                              }}>
+                              <Trash2 size={11} /> Hapus
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-
-                    <input type="text" className="glass-input" placeholder="Atau masukkan URL foto sertifikat..."
-                      value={cert.image || ''}
-                      onChange={(e) => updateCert(cIdx, 'image', e.target.value)}
-                      style={{ fontSize: '12px' }} />
                   </div>
 
                   {[
@@ -898,17 +971,35 @@ export const EditDrawer = () => {
           borderTop: '1px solid var(--border)',
           backgroundColor: '#0F0F0F',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
+          flexDirection: 'column',
+          gap: '10px'
         }}>
-          <button onClick={resetToDefaults}
-            style={{ background: 'transparent', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <RotateCcw size={13} /> Reset ke Default
-          </button>
-          <button onClick={() => setIsDrawerOpen(false)} className="glass-pill-container"
-            style={{ padding: '8px 18px', fontSize: '13px', color: '#FFFFFF', cursor: 'pointer' }}>
-            Selesai Editing
-          </button>
+          {/* Server status */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              width: '8px', height: '8px', borderRadius: '50%',
+              background: serverOnline ? '#10B981' : '#EF4444',
+              boxShadow: serverOnline ? '0 0 6px rgba(16,185,129,0.5)' : '0 0 6px rgba(239,68,68,0.5)'
+            }} />
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+              {serverOnline ? (
+                isSaving ? 'Menyimpan...' : (lastSaved ? `Tersimpan ${lastSaved.toLocaleTimeString('id-ID')}` : 'Server terhubung')
+              ) : (
+                'Server offline — jalankan: npm run server'
+              )}
+            </span>
+          </div>
+          {/* Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <button onClick={resetToDefaults}
+              style={{ background: 'transparent', border: 'none', color: '#EF4444', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <RotateCcw size={13} /> Reset ke Default
+            </button>
+            <button onClick={() => setIsDrawerOpen(false)} className="glass-pill-container"
+              style={{ padding: '8px 18px', fontSize: '13px', color: '#FFFFFF', cursor: 'pointer' }}>
+              Selesai Editing
+            </button>
+          </div>
         </div>
       </div>
     </div>
