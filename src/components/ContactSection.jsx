@@ -24,35 +24,55 @@ export const ContactSection = () => {
     setContactLoading(true);
     setContactError('');
 
+    const accessKey = data.web3formsKey || '';
     const targetEmail = personal?.email || 'davasetiawan893@gmail.com';
 
+    // Jika admin belum setting API Web3Forms / FormSubmit, kita berikan fallback Mailto/WA
+    // Agar form tetap bisa digunakan secara nyata tanpa server
+    if (!accessKey) {
+      if (isAdmin) {
+        setContactError('⚠️ API Key belum diset. Form ini akan membuka Email/WhatsApp klien saat ditekan. (Isi Web3Forms Key di menu edit jika ingin pesan masuk diam-diam).');
+        setContactLoading(false);
+        setTimeout(() => setContactError(''), 8000);
+      }
+      
+      // Fallback: Arahkan membuka email atau WA secara langsung (100% selalu berfungsi)
+      const text = `Halo, saya ${contactForm.name} (${contactForm.email}).%0A%0A${contactForm.message}`;
+      window.location.href = `mailto:${targetEmail}?subject=Pesan dari Website Portofolio&body=${text}`;
+      
+      setContactSuccess(true);
+      setContactForm({ name: '', email: '', message: '' });
+      setContactLoading(false);
+      setTimeout(() => setContactSuccess(false), 5000);
+      return;
+    }
+
     try {
-      const response = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+      // Jika memiliki Web3Forms Access Key, kirim secara diam-diam!
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
+          access_key: accessKey,
           name: contactForm.name,
           email: contactForm.email,
           message: contactForm.message,
-          _subject: `[Portofolio] Pesan Baru dari ${contactForm.name}`,
-          _template: 'table'
+          subject: `[Portofolio] Pesan Baru dari ${contactForm.name}`,
+          from_name: contactForm.name,
         }),
       });
 
       const result = await response.json();
 
-      if (response.ok || result.success === "true" || result.success === true) {
+      if (response.ok && result.success) {
         setContactSuccess(true);
         setContactForm({ name: '', email: '', message: '' });
         setTimeout(() => setContactSuccess(false), 6000);
       } else {
-        setContactError('Gagal mengirim pesan. Pastikan email Anda valid.');
+        setContactError('Gagal mengirim pesan. Pastikan API Key valid.');
       }
     } catch (err) {
-      setContactError('Koneksi bermasalah. Periksa koneksi internet Anda dan coba lagi.');
+      setContactError('Koneksi bermasalah. Periksa koneksi internet Anda.');
     } finally {
       setContactLoading(false);
     }
