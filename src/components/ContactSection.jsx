@@ -21,49 +21,38 @@ export const ContactSection = () => {
     e.preventDefault();
     if (!contactForm.name || !contactForm.email || !contactForm.message) return;
 
-    const accessKey = data.web3formsKey || '';
-
-    // If no access key is set, fall back to UI-only success (admin sees warning)
-    if (!accessKey) {
-      if (isAdmin) {
-        setContactError('⚠️ Web3Forms Access Key belum diset. Buka Edit → Contact untuk mengonfigurasi notifikasi email.');
-        return;
-      }
-      // For visitors without key configured: simulate success
-      setContactSuccess(true);
-      setContactForm({ name: '', email: '', message: '' });
-      setTimeout(() => setContactSuccess(false), 5000);
-      return;
-    }
-
     setContactLoading(true);
     setContactError('');
 
+    const targetEmail = personal?.email || 'davasetiawan893@gmail.com';
+
     try {
-      const response = await fetch('https://api.web3forms.com/submit', {
+      const response = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({
-          access_key: accessKey,
           name: contactForm.name,
           email: contactForm.email,
           message: contactForm.message,
-          subject: `[Portfolio] Pesan baru dari ${contactForm.name}`,
-          from_name: contactForm.name,
+          _subject: `[Portofolio] Pesan Baru dari ${contactForm.name}`,
+          _template: 'table'
         }),
       });
 
       const result = await response.json();
 
-      if (result.success) {
+      if (response.ok || result.success === "true" || result.success === true) {
         setContactSuccess(true);
         setContactForm({ name: '', email: '', message: '' });
         setTimeout(() => setContactSuccess(false), 6000);
       } else {
-        setContactError('Gagal mengirim pesan. Coba lagi nanti.');
+        setContactError('Gagal mengirim pesan. Pastikan email Anda valid.');
       }
     } catch (err) {
-      setContactError('Koneksi bermasalah. Periksa internet Anda dan coba lagi.');
+      setContactError('Koneksi bermasalah. Periksa koneksi internet Anda dan coba lagi.');
     } finally {
       setContactLoading(false);
     }
