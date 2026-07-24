@@ -19,7 +19,7 @@
     "exploreText": "↓ explore my work below",
     "opportunityText": "↗ open to full-time & freelance opportunities",
     "email": "davasetiawan893@gmail.com",
-    "avatar": "http://localhost:3001/uploads/1784909263361-432730.jpeg"
+    "avatar": "/uploads/1784909263361-432730.jpeg"
   },
   "about": {
     "sectionTitle": "Tentang Saya",
@@ -95,7 +95,7 @@
         "TypeScript",
         "HTML"
       ],
-      "image": "http://localhost:3001/uploads/1784909473803-888597.png",
+      "image": "/uploads/1784909473803-888597.png",
       "demoUrl": "https://example.com",
       "githubUrl": "https://github.com/RifqiMuhammadAliya12"
     },
@@ -111,7 +111,7 @@
         "Tailwind",
         "OpenAI"
       ],
-      "image": "http://localhost:3001/uploads/1784909573984-18513.png",
+      "image": "/uploads/1784909573984-18513.png",
       "demoUrl": "https://example.com",
       "githubUrl": "https://github.com/RifqiMuhammadAliya12"
     },
@@ -126,7 +126,7 @@
         "Tailwind CSS",
         "WebSockets"
       ],
-      "image": "http://localhost:3001/uploads/1784909562399-195445.png",
+      "image": "/uploads/1784909562399-195445.png",
       "demoUrl": "https://example.com",
       "githubUrl": "https://github.com/RifqiMuhammadAliya12"
     }
