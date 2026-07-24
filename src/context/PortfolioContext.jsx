@@ -57,27 +57,53 @@ export const PortfolioProvider = ({ children }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Save data to server (with debounce)
+  // Save data to server (or localStorage fallback on Vercel)
   const saveToServer = useCallback(async (newData) => {
-    if (!serverOnline) return;
     setIsSaving(true);
     try {
-      const res = await fetch(`${API_BASE}/api/portfolio`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newData)
-      });
-      if (res.ok) {
-        setLastSaved(new Date());
+      if (serverOnline) {
+        const res = await fetch(`${API_BASE}/api/portfolio`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newData)
+        });
+        if (res.ok) setLastSaved(new Date());
       }
+      // Selalu simpan ke localStorage sebagai fallback di browser
+      localStorage.setItem('vercel_portfolio_custom_data_v3', JSON.stringify(newData));
+      setLastSaved(new Date());
     } catch (err) {
-      console.error('Gagal menyimpan ke server:', err);
+      console.error('Gagal menyimpan data:', err);
     } finally {
       setIsSaving(false);
     }
   }, [serverOnline]);
 
-  // Auto-save when data changes by user (bukan saat initial load)
+  // Load data from server or localStorage fallback
+  useEffect(() => {
+    const savedLocal = localStorage.getItem('vercel_portfolio_custom_data_v3');
+    fetch(`${API_BASE}/api/portfolio`)
+      .then(res => {
+        if (!res.ok) throw new Error('API return non-200');
+        return res.json();
+      })
+      .then(serverData => {
+        setData(serverData);
+        setServerOnline(true);
+        setTimeout(() => { isInitialLoad.current = false; }, 100);
+      })
+      .catch(() => {
+        setServerOnline(false);
+        if (savedLocal) {
+          try {
+            setData(JSON.parse(savedLocal));
+          } catch (e) {}
+        }
+        setTimeout(() => { isInitialLoad.current = false; }, 100);
+      });
+  }, []);
+
+  // Auto-save when data changes by user
   useEffect(() => {
     if (isInitialLoad.current) return;
 
@@ -106,29 +132,41 @@ export const PortfolioProvider = ({ children }) => {
   const resetToDefaults = () => {
     if (window.confirm('Apakah Anda yakin ingin mengembalikan semua data ke setelan awal default?')) {
       setData(defaultData);
+      localStorage.removeItem('vercel_portfolio_custom_data_v3');
     }
   };
 
-  // Upload image file to server
+  // Upload image file to server (with Base64 fallback for Vercel)
   const uploadImage = async (file) => {
-    const formData = new FormData();
-    formData.append('image', file);
-    try {
-      const res = await fetch(`${API_BASE}/api/upload`, {
-        method: 'POST',
-        body: formData
-      });
-      const result = await res.json();
-      if (result.success) {
-        return `${API_BASE}${result.url}`;
-      } else {
-        alert('Upload gagal: ' + (result.error || 'Unknown error'));
-        return null;
+    if (!file) return null;
+
+    // Jika API server terhubung, coba upload ke backend
+    if (serverOnline) {
+      const formData = new FormData();
+      formData.append('image', file);
+      try {
+        const res = await fetch(`${API_BASE}/api/upload`, {
+          method: 'POST',
+          body: formData
+        });
+        if (res.ok) {
+          const result = await res.json();
+          if (result.success) {
+            return `${API_BASE}${result.url}`;
+          }
+        }
+      } catch (err) {
+        console.warn('Backend upload failed, falling back to base64 reader:', err);
       }
-    } catch (err) {
-      alert('Gagal upload ke server. Pastikan server berjalan (npm run server).');
-      return null;
     }
+
+    // Fallback Vercel / Offline: Konversi gambar menjadi Data URL (Base64)
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
   };
 
   // Delete uploaded image from server
@@ -136,7 +174,9 @@ export const PortfolioProvider = ({ children }) => {
     if (!imageUrl || !imageUrl.includes('/uploads/')) return;
     const filename = imageUrl.split('/uploads/').pop();
     try {
-      await fetch(`${API_BASE}/api/upload/${filename}`, { method: 'DELETE' });
+      if (serverOnline) {
+        await fetch(`${API_BASE}/api/upload/${filename}`, { method: 'DELETE' });
+      }
     } catch (err) {
       console.error('Gagal menghapus file:', err);
     }
