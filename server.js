@@ -48,18 +48,9 @@ const upload = multer({
   }
 });
 
-// Path to portfolio data file (di luar src/ agar Vite HMR tidak berkedip saat autosave)
-const dataDir = path.join(__dirname, 'data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
-const dataFile = path.join(dataDir, 'portfolio.json');
-
-// Jika file portfolio.json belum ada, salin dari defaultPortfolio.json
-const defaultDataFile = path.join(__dirname, 'src', 'data', 'defaultPortfolio.json');
-if (!fs.existsSync(dataFile) && fs.existsSync(defaultDataFile)) {
-  fs.copyFileSync(defaultDataFile, dataFile);
-}
+// Path to portfolio data file (di dalam src/ agar Vercel membaca data terbaru saat dibuild)
+// HMR Vite sudah dimatikan untuk folder data, jadi tidak akan berkedip
+const dataFile = path.join(__dirname, 'src', 'data', 'defaultPortfolio.json');
 
 // ==================== API ROUTES ====================
 
@@ -131,7 +122,7 @@ app.get('/api/uploads', (req, res) => {
 const distDir = path.join(__dirname, 'dist');
 if (fs.existsSync(distDir)) {
   app.use(express.static(distDir));
-  app.get('*', (req, res) => {
+  app.use((req, res) => {
     res.sendFile(path.join(distDir, 'index.html'));
   });
 }

@@ -19,12 +19,12 @@
     "exploreText": "↓ explore my work below",
     "opportunityText": "↗ open to full-time & freelance opportunities",
     "email": "davasetiawan893@gmail.com",
-    "avatar": "/profile.png"
+    "avatar": "http://localhost:3001/uploads/1784909263361-432730.jpeg"
   },
   "about": {
     "sectionTitle": "Tentang Saya",
-    "description": "Hai! Saya Mohammad Dava Setiawan, seorang Frontend Developer yang passionate dalam menciptakan pengalaman digital yang indah, responsif, dan intuitif. Saya percaya bahwa desain yang baik bukan hanya soal estetika, tetapi juga tentang bagaimana pengguna merasakan dan berinteraksi dengan produk.",
-    "longBio": "Dengan pengalaman di React.js, Next.js, TypeScript, dan Tailwind CSS, saya membangun antarmuka yang tidak hanya memukau secara visual tetapi juga berkinerja tinggi. Saya selalu bersemangat untuk belajar teknologi baru dan menghadirkan solusi kreatif untuk setiap tantangan.",
+    "description": "Developer Web Full-Stack pemula yang berdedikasi dan memiliki minat tinggi di bidang teknologi. Menguasai fundamental front-end (HTML, CSS, JavaScript) serta memiliki pemahaman yang baik dalam pengembangan backend dan manajemen database. Terbiasa mengelola proyek pengembangan aplikasi dari hulu ke hilir dengan fokus pada fungsionalitas dan efisiensi.",
+    "longBio": "A dedicated entry-level full-stack web developer with a strong interest in technology. Proficient in front-end fundamentals (HTML, CSS, JavaScript) and possesses a solid understanding of backend development and database management. Experienced in managing application development projects from start to finish, with a focus on functionality and efficiency.",
     "location": "Indonesia",
     "stats": [
       {
@@ -86,47 +86,47 @@
   "projects": [
     {
       "id": "proj-1",
-      "title": "E-Commerce Modern Platform",
+      "title": "PDAM Management System",
       "description": "Platform e-commerce performa tinggi dengan fitur filter katalog real-time, keranjang belanja interaktif, dan antarmuka dark glassmorphic.",
       "category": "Web App",
       "tags": [
         "React.js",
         "Tailwind CSS",
         "TypeScript",
-        "Vite"
+        "HTML"
       ],
-      "image": "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80",
+      "image": "http://localhost:3001/uploads/1784909473803-888597.png",
       "demoUrl": "https://example.com",
       "githubUrl": "https://github.com/RifqiMuhammadAliya12"
     },
     {
       "id": "proj-2",
-      "title": "AI Content Assistant Studio",
+      "title": "Car Rental (Frontend)",
       "tagline": "Platform visual generasi teks dan konten berbasis kecerdasan buatan.",
       "description": "Aplikasi web modern yang mengintegrasikan API OpenAI dengan antarmuka yang sangat responsif, cepat, dan intuitif.",
-      "category": "AI & Web",
+      "category": "Web App",
       "tags": [
         "Next.js",
         "TypeScript",
         "Tailwind",
         "OpenAI"
       ],
-      "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      "image": "http://localhost:3001/uploads/1784909573984-18513.png",
       "demoUrl": "https://example.com",
       "githubUrl": "https://github.com/RifqiMuhammadAliya12"
     },
     {
       "id": "proj-3",
-      "title": "Interactive Telemetry Dashboard",
+      "title": "Personal Website Portofolio",
       "description": "Dashboard monitoring analytics real-time dengan grafik interaktif dan kontrol responsif untuk pemantauan data.",
-      "category": "Dashboard",
+      "category": "Web App",
       "tags": [
         "React",
         "Chart.js",
         "Tailwind CSS",
         "WebSockets"
       ],
-      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+      "image": "http://localhost:3001/uploads/1784909562399-195445.png",
       "demoUrl": "https://example.com",
       "githubUrl": "https://github.com/RifqiMuhammadAliya12"
     }
