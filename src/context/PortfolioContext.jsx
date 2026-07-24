@@ -3,7 +3,9 @@ import defaultData from '../data/defaultPortfolio.json';
 
 const PortfolioContext = createContext();
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+  ? 'http://localhost:3001'
+  : '';
 
 export const PortfolioProvider = ({ children }) => {
   const [data, setData] = useState(defaultData);

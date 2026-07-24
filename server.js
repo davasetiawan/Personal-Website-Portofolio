@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
@@ -127,8 +127,17 @@ app.get('/api/uploads', (req, res) => {
   }
 });
 
+// Serve static frontend build (dist folder) if available (Production)
+const distDir = path.join(__dirname, 'dist');
+if (fs.existsSync(distDir)) {
+  app.use(express.static(distDir));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+}
+
 app.listen(PORT, () => {
-  console.log(`\n🚀 Portfolio API Server running at http://localhost:${PORT}`);
+  console.log(`\n🚀 Portfolio Server running at port ${PORT}`);
   console.log(`📁 Uploads directory: ${uploadsDir}`);
   console.log(`📄 Data file: ${dataFile}\n`);
 });
