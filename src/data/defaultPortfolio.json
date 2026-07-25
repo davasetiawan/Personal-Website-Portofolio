@@ -19,7 +19,7 @@
     "exploreText": "↓ explore my work below",
     "opportunityText": "↗ open to full-time & freelance opportunities",
     "email": "davasetiawan893@gmail.com",
-    "avatar": "/uploads/1784971082700-430203.jpeg"
+    "avatar": "http://localhost:3001/uploads/1784971420225-685702.jpeg"
   },
   "about": {
     "sectionTitle": "Tentang Saya",
@@ -89,7 +89,7 @@
         "TypeScript",
         "HTML"
       ],
-      "image": "/uploads/1784909473803-888597.png",
+      "image": "http://localhost:3001/uploads/1784971486309-77752.png",
       "demoUrl": "https://example.com",
       "githubUrl": "https://github.com/davasetiawan"
     },
@@ -103,9 +103,9 @@
         "Next.js",
         "TypeScript",
         "Tailwind",
-        "OpenAI"
+        "React"
       ],
-      "image": "/uploads/1784909573984-18513.png",
+      "image": "http://localhost:3001/uploads/1784971508066-825138.png",
       "demoUrl": "https://car-rental-front-end-murex.vercel.app",
       "githubUrl": "https://github.com/davasetiawan/CarRental-FrontEnd"
     },
@@ -116,11 +116,10 @@
       "category": "Web App",
       "tags": [
         "React",
-        "Chart.js",
         "Tailwind CSS",
-        "WebSockets"
+        "Next.js"
       ],
-      "image": "/uploads/1784909562399-195445.png",
+      "image": "http://localhost:3001/uploads/1784971526562-885936.png",
       "demoUrl": "https://portofolio-davasetiawan.vercel.app",
       "githubUrl": "https://github.com/davasetiawan/Personal-Website-Portofolio"
     }
