@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { ExternalLink, Globe, Mail } from 'lucide-react';
+import { ensureAbsoluteUrl } from '../utils/urlHelper';
 import { Reveal } from '../hooks/useScrollReveal';
 
 const IconLinkedIn = ({ size = 22 }) => (
@@ -106,9 +107,10 @@ export const ContactSection = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {allLinks.map((soc, idx) => {
             const gradient = getSocialGradient(soc.icon);
-            const href = (soc.icon || '').toLowerCase() === 'email' || (soc.icon || '').toLowerCase() === 'mail'
+            const rawHref = (soc.icon || '').toLowerCase() === 'email' || (soc.icon || '').toLowerCase() === 'mail'
               ? (soc.url.startsWith('mailto:') ? soc.url : `mailto:${soc.url}`)
               : soc.url;
+            const href = ensureAbsoluteUrl(rawHref);
 
             return (
               <Reveal key={idx} delay={idx * 80}>

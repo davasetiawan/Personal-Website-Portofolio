@@ -88,29 +88,7 @@ export const PortfolioProvider = ({ children }) => {
     }
   }, [serverOnline]);
 
-  // Load data from server or localStorage fallback
-  useEffect(() => {
-    const savedLocal = localStorage.getItem('vercel_portfolio_custom_data_v3');
-    fetch(`${API_BASE}/api/portfolio`)
-      .then(res => {
-        if (!res.ok) throw new Error('API return non-200');
-        return res.json();
-      })
-      .then(serverData => {
-        setData(serverData);
-        setServerOnline(true);
-        setTimeout(() => { isInitialLoad.current = false; }, 100);
-      })
-      .catch(() => {
-        setServerOnline(false);
-        if (savedLocal) {
-          try {
-            setData(JSON.parse(savedLocal));
-          } catch (e) {}
-        }
-        setTimeout(() => { isInitialLoad.current = false; }, 100);
-      });
-  }, []);
+  // Auto-save when data changes by user (di localhost saja atau saat admin mengedit)
 
   // Auto-save when data changes by user
   useEffect(() => {

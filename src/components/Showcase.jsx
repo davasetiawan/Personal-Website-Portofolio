@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { ArrowUpRight, Award, X, ZoomIn, ExternalLink } from 'lucide-react';
 import { getSkillLogoUrl } from '../utils/getSkillLogo';
+import { ensureAbsoluteUrl } from '../utils/urlHelper';
 import { Reveal } from '../hooks/useScrollReveal';
 
 /* ============================================
@@ -242,9 +243,9 @@ export const Showcase = () => {
                     {/* Action Buttons */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: 'auto' }}>
                       {/* Live Demo Button */}
-                      {proj.demoUrl && proj.demoUrl !== 'https://example.com' ? (
+                      {proj.demoUrl && proj.demoUrl !== 'https://example.com' && proj.demoUrl !== 'example.com' ? (
                         <a
-                          href={proj.demoUrl}
+                          href={ensureAbsoluteUrl(proj.demoUrl)}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={btnDemo}
@@ -264,7 +265,7 @@ export const Showcase = () => {
                       {/* GitHub Button */}
                       {proj.githubUrl && proj.githubUrl.includes('github.com') && (
                         <a
-                          href={proj.githubUrl}
+                          href={ensureAbsoluteUrl(proj.githubUrl)}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={btnGit}
