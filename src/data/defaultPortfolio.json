@@ -66,9 +66,15 @@
     },
     {
       "name": "Instagram",
-      "handle": "@instagram",
+      "handle": "@dava.setiawan",
       "url": "https://www.instagram.com/",
       "icon": "instagram"
+    },
+    {
+      "name": "Email",
+      "handle": "davasetiawan893@gmail.com",
+      "url": "mailto:davasetiawan893@gmail.com",
+      "icon": "email"
     }
   ],
   "projects": [
@@ -85,7 +91,7 @@
       ],
       "image": "/uploads/1784909473803-888597.png",
       "demoUrl": "https://example.com",
-      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+      "githubUrl": "https://github.com/davasetiawan"
     },
     {
       "id": "proj-2",
@@ -100,8 +106,8 @@
         "OpenAI"
       ],
       "image": "/uploads/1784909573984-18513.png",
-      "demoUrl": "https://example.com",
-      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+      "demoUrl": "https://car-rental-front-end-murex.vercel.app",
+      "githubUrl": "https://github.com/davasetiawan/CarRental-FrontEnd"
     },
     {
       "id": "proj-3",
@@ -115,8 +121,8 @@
         "WebSockets"
       ],
       "image": "/uploads/1784909562399-195445.png",
-      "demoUrl": "https://example.com",
-      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+      "demoUrl": "https://portofolio-davasetiawan.vercel.app",
+      "githubUrl": "https://github.com/davasetiawan/Personal-Website-Portofolio"
     }
   ],
   "certificates": [
