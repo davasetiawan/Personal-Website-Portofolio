@@ -25,12 +25,21 @@ export const PortfolioProvider = ({ children }) => {
 
   // Load data from server on mount
   useEffect(() => {
+    const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+
+    if (!isLocalhost) {
+      // Di Vercel / production: tidak ada API server, langsung pakai data dari bundled JSON
+      setServerOnline(false);
+      isInitialLoad.current = false;
+      return;
+    }
+
+    // Di localhost: ambil data dari Express API server
     fetch(`${API_BASE}/api/portfolio`)
       .then(res => res.json())
       .then(serverData => {
         setData(serverData);
         setServerOnline(true);
-        // Tandai bahwa initial load selesai setelah state ter-apply
         setTimeout(() => {
           isInitialLoad.current = false;
         }, 100);
