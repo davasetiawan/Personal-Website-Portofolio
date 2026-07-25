@@ -426,6 +426,26 @@ export const EditDrawer = () => {
                   onChange={(e) => updateField(['personal', 'coreStack'], e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
                 />
               </div>
+
+              <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <SectionHeader title="Sosial Media" count={data.socials?.length} onAdd={() => updateField(['socials'], [...(data.socials || []), { name: 'New Link', handle: '@handle', url: '', icon: 'globe' }])} addLabel="Tambah" />
+                {data.socials?.map((soc, sIdx) => (
+                  <div key={sIdx} style={{ padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', marginBottom: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center' }}>
+                      <input type="text" className="glass-input" placeholder="Nama (Github)" value={soc.name || ''} onChange={e => { const arr = [...data.socials]; arr[sIdx].name = e.target.value; updateField(['socials'], arr); }} style={{ flex: 1, fontSize: '11px' }} />
+                      <input type="text" className="glass-input" placeholder="Handle (@user)" value={soc.handle || ''} onChange={e => { const arr = [...data.socials]; arr[sIdx].handle = e.target.value; updateField(['socials'], arr); }} style={{ flex: 1, fontSize: '11px' }} />
+                      <button onClick={() => { const arr = [...data.socials]; arr.splice(sIdx, 1); updateField(['socials'], arr); }} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer' }}><Trash2 size={14}/></button>
+                    </div>
+                    <input type="text" className="glass-input" placeholder="URL Link Profil..." value={soc.url || ''} onChange={e => { const arr = [...data.socials]; arr[sIdx].url = e.target.value; updateField(['socials'], arr); }} style={{ fontSize: '11px' }} />
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <label style={{ display: 'block', fontSize: '12px', marginBottom: '6px', color: '#10B981', fontWeight: 600 }}>Web3Forms Access Key (Kontak Email)</label>
+                <input type="text" className="glass-input" placeholder="Paste Access Key dari web3forms..." value={data.web3formsKey || ''} onChange={(e) => updateField(['web3formsKey'], e.target.value)} />
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '6px' }}>Jika ini diisi, form Hubungi Saya akan diam-diam mengirim pesan langsung ke email Anda tanpa membuka aplikasi WhatsApp klien.</p>
+              </div>
             </div>
           )}
 
