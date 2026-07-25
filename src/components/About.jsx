@@ -86,7 +86,7 @@ export const About = () => {
                 backgroundColor: 'rgba(0,0,0,0.6)'
               }}>
                 <img
-                  src={personal.avatar || '/public/WhatsApp Image 2026-07-24 at 21.14.56.jpeg'}
+                  src={personal.avatar || '/profile.png'}
                   alt={personal.name || 'Profile'}
                   style={{
                     width: '100%',
@@ -95,7 +95,8 @@ export const About = () => {
                     objectPosition: 'center top'
                   }}
                   onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
+                    e.target.onerror = null;
+                    e.target.src = '/profile.png';
                   }}
                 />
               </div>
