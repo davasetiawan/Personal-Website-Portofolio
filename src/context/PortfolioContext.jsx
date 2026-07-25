@@ -38,6 +38,8 @@ export const PortfolioProvider = ({ children }) => {
     fetch(`${API_BASE}/api/portfolio`)
       .then(res => res.json())
       .then(serverData => {
+        // Hapus localStorage lama agar tidak menimpa data fresh dari server/file JSON
+        try { localStorage.removeItem('vercel_portfolio_custom_data_v3'); } catch (e) {}
         setData(serverData);
         setServerOnline(true);
         setTimeout(() => {
