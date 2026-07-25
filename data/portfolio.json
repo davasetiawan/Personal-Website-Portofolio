@@ -19,7 +19,7 @@
     "exploreText": "↓ explore my work below",
     "opportunityText": "↗ open to full-time & freelance opportunities",
     "email": "davasetiawan893@gmail.com",
-    "avatar": "http://localhost:3001/uploads/1784909263361-432730.jpeg"
+    "avatar": "/uploads/1784909263361-432730.jpeg"
   },
   "about": {
     "sectionTitle": "Tentang Saya",
@@ -54,33 +54,27 @@
   "socials": [
     {
       "name": "LinkedIn",
-      "handle": "@linkedin",
-      "url": "https://www.linkedin.com/in/rifqimuhammadaliya/",
+      "handle": "Mohammad Dava Setiawan",
+      "url": "https://www.linkedin.com/in/davasetiawan/",
       "icon": "linkedin"
     },
     {
-      "name": "Instagram",
-      "handle": "@instagram",
-      "url": "https://www.instagram.com/itsmeikky_12",
-      "icon": "instagram"
-    },
-    {
-      "name": "Youtube",
-      "handle": "@youtube",
-      "url": "https://youtube.com/@zettaajah",
-      "icon": "youtube"
-    },
-    {
-      "name": "Github",
-      "handle": "@github",
-      "url": "https://github.com/RifqiMuhammadAliya12",
+      "name": "GitHub",
+      "handle": "@davasetiawan",
+      "url": "https://github.com/davasetiawan",
       "icon": "github"
     },
     {
-      "name": "TikTok",
-      "handle": "@tiktok",
-      "url": "https://www.tiktok.com/@itsme.ikky_",
-      "icon": "tiktok"
+      "name": "Instagram",
+      "handle": "@dava.setiawan",
+      "url": "https://www.instagram.com/",
+      "icon": "instagram"
+    },
+    {
+      "name": "Email",
+      "handle": "davasetiawan893@gmail.com",
+      "url": "mailto:davasetiawan893@gmail.com",
+      "icon": "email"
     }
   ],
   "projects": [
@@ -95,9 +89,9 @@
         "TypeScript",
         "HTML"
       ],
-      "image": "http://localhost:3001/uploads/1784909473803-888597.png",
+      "image": "/uploads/1784909473803-888597.png",
       "demoUrl": "https://example.com",
-      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+      "githubUrl": "https://github.com/davasetiawan"
     },
     {
       "id": "proj-2",
@@ -111,9 +105,9 @@
         "Tailwind",
         "OpenAI"
       ],
-      "image": "http://localhost:3001/uploads/1784909573984-18513.png",
-      "demoUrl": "https://example.com",
-      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+      "image": "/uploads/1784909573984-18513.png",
+      "demoUrl": "https://car-rental-front-end-murex.vercel.app",
+      "githubUrl": "https://github.com/davasetiawan/CarRental-FrontEnd"
     },
     {
       "id": "proj-3",
@@ -126,9 +120,9 @@
         "Tailwind CSS",
         "WebSockets"
       ],
-      "image": "http://localhost:3001/uploads/1784909562399-195445.png",
-      "demoUrl": "https://example.com",
-      "githubUrl": "https://github.com/RifqiMuhammadAliya12"
+      "image": "/uploads/1784909562399-195445.png",
+      "demoUrl": "https://portofolio-davasetiawan.vercel.app",
+      "githubUrl": "https://github.com/davasetiawan/Personal-Website-Portofolio"
     }
   ],
   "certificates": [
