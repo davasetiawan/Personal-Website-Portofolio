@@ -161,7 +161,7 @@ const InteractiveLanyard = ({ personal }) => {
           backgroundColor: 'rgba(0,0,0,0.6)'
         }}>
           <img
-            src={personal.avatar ? (personal.avatar.includes('/uploads/') ? '/uploads/' + personal.avatar.split('/uploads/').pop() : personal.avatar) : '/uploads/1784971082700-430203.jpeg'}
+            src={personal.avatar || '/profile.png'}
             alt={personal.name || 'Profile'}
             style={{
               width: '100%',
@@ -172,7 +172,7 @@ const InteractiveLanyard = ({ personal }) => {
             }}
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = '/uploads/1784971082700-430203.jpeg';
+              e.target.src = '/profile.png';
             }}
           />
         </div>
