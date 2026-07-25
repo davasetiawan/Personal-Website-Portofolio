@@ -176,8 +176,9 @@ export const Projects = () => {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    paddingTop: '12px',
-                    borderTop: '1px solid var(--color-border)'
+                    paddingTop: '16px',
+                    marginTop: 'auto',
+                    borderTop: '1px solid var(--border)'
                   }}>
                     {project.demoUrl && (
                       <a
@@ -185,10 +186,10 @@ export const Projects = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="button-primary"
-                        style={{ height: '34px', padding: '0 12px', fontSize: '12px', flex: 1 }}
+                        style={{ height: '36px', padding: '0 16px', fontSize: '13px', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                       >
                         <span>Live Demo</span>
-                        <ExternalLink size={13} />
+                        <ExternalLink size={14} />
                       </a>
                     )}
                     {project.githubUrl && (
@@ -197,10 +198,10 @@ export const Projects = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="button-secondary"
-                        style={{ height: '34px', padding: '0 12px', fontSize: '12px' }}
+                        style={{ height: '36px', width: '36px', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
                         title="Source Code"
                       >
-                        <IconGithub size={14} />
+                        <IconGithub size={16} />
                       </a>
                     )}
                   </div>
