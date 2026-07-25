@@ -161,7 +161,7 @@ const InteractiveLanyard = ({ personal }) => {
           backgroundColor: 'rgba(0,0,0,0.6)'
         }}>
           <img
-            src={personal.avatar || '/profile.png'}
+            src={personal.avatar ? (personal.avatar.includes('/uploads/') ? '/uploads/' + personal.avatar.split('/uploads/').pop() : personal.avatar) : '/uploads/1784909263361-432730.jpeg'}
             alt={personal.name || 'Profile'}
             style={{
               width: '100%',
@@ -171,7 +171,8 @@ const InteractiveLanyard = ({ personal }) => {
               pointerEvents: 'none'
             }}
             onError={(e) => {
-              e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';
+              e.target.onerror = null;
+              e.target.src = '/uploads/1784909263361-432730.jpeg';
             }}
           />
         </div>
