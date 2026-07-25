@@ -86,7 +86,7 @@ export const About = () => {
                 backgroundColor: 'rgba(0,0,0,0.6)'
               }}>
                 <img
-                  src={personal.avatar || '/profile.png'}
+                  src={personal.avatar || '/public/WhatsApp Image 2026-07-24 at 21.14.56.jpeg'}
                   alt={personal.name || 'Profile'}
                   style={{
                     width: '100%',
@@ -240,38 +240,7 @@ export const About = () => {
         </Reveal>
       </div>
 
-      {/* Stats Grid */}
-      {about.stats && about.stats.length > 0 && (
-        <Reveal delay={120}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-            gap: '16px'
-          }}>
-            {about.stats.map((stat, idx) => (
-              <div key={idx} className="about-stat-card">
-                <div style={{
-                  fontSize: 'clamp(32px, 4vw, 48px)',
-                  fontWeight: 800,
-                  color: '#FFFFFF',
-                  letterSpacing: '-0.03em',
-                  marginBottom: '6px'
-                }}>
-                  {stat.value}
-                </div>
-                <div style={{
-                  fontSize: '13px',
-                  color: 'var(--text-secondary)',
-                  fontFamily: 'var(--font-mono)',
-                  letterSpacing: '0.05em'
-                }}>
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      )}
+
     </section>
   );
 };
