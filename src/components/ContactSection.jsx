@@ -1,495 +1,193 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { User, Mail, MessageSquare, Send, ArrowUpRight, Upload, Check, Eye, EyeOff, Trash2, AlertCircle, Loader, Bell } from 'lucide-react';
+import { ExternalLink, Globe, Mail } from 'lucide-react';
 import { Reveal } from '../hooks/useScrollReveal';
 
+const IconLinkedIn = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+  </svg>
+);
+
+const IconGithubSVG = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+  </svg>
+);
+
+const IconInstagram = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+  </svg>
+);
+
+const getSocialIcon = (iconName, size = 22) => {
+  const name = (iconName || '').toLowerCase();
+  if (name === 'linkedin') return <IconLinkedIn size={size} />;
+  if (name === 'github') return <IconGithubSVG size={size} />;
+  if (name === 'instagram') return <IconInstagram size={size} />;
+  if (name === 'email' || name === 'mail') return <Mail size={size} />;
+  return <Globe size={size} />;
+};
+
+const getSocialGradient = (iconName) => {
+  const name = (iconName || '').toLowerCase();
+  if (name === 'linkedin') return 'linear-gradient(135deg, #0077B5, #00A0DC)';
+  if (name === 'github') return 'linear-gradient(135deg, #333, #666)';
+  if (name === 'instagram') return 'linear-gradient(135deg, #833AB4, #FD1D1D, #F77737)';
+  if (name === 'twitter' || name === 'x') return 'linear-gradient(135deg, #1DA1F2, #0d8fdb)';
+  if (name === 'youtube') return 'linear-gradient(135deg, #FF0000, #cc0000)';
+  if (name === 'tiktok') return 'linear-gradient(135deg, #000, #333)';
+  if (name === 'email' || name === 'mail') return 'linear-gradient(135deg, #10B981, #059669)';
+  return 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))';
+};
+
+// Tampilkan hanya sosmed yang diminta user (linkedin, github, instagram) + email personal
+const PRIORITY_ICONS = ['linkedin', 'github', 'instagram', 'email', 'mail'];
+
 export const ContactSection = () => {
-  const { data, updateField, isAdmin } = usePortfolio();
-  const { socials = [], comments = [], personal } = data;
+  const { data } = usePortfolio();
+  const { socials = [], personal = {} } = data;
 
-  // Form states
-  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
-  const [contactSuccess, setContactSuccess] = useState(false);
-  const [contactLoading, setContactLoading] = useState(false);
-  const [contactError, setContactError] = useState('');
-
-  // Comment states
-  const [commentForm, setCommentForm] = useState({ name: '', text: '', image: null });
-  const [imagePreview, setImagePreview] = useState(null);
-
-  const handleContactSubmit = async (e) => {
-    e.preventDefault();
-    if (!contactForm.name || !contactForm.email || !contactForm.message) return;
-
-    setContactLoading(true);
-    setContactError('');
-
-    const accessKey = data.web3formsKey || '';
-    const targetEmail = personal?.email || 'davasetiawan893@gmail.com';
-
-    // Jika admin belum setting API Web3Forms / FormSubmit, kita berikan fallback Mailto/WA
-    // Agar form tetap bisa digunakan secara nyata tanpa server
-    if (!accessKey) {
-      if (isAdmin) {
-        setContactError('⚠️ API Key belum diset. Form ini akan membuka Email/WhatsApp klien saat ditekan. (Isi Web3Forms Key di menu edit jika ingin pesan masuk diam-diam).');
-        setContactLoading(false);
-        setTimeout(() => setContactError(''), 8000);
-      }
-      
-      // Fallback: Arahkan membuka email atau WA secara langsung (100% selalu berfungsi)
-      const text = `Halo, saya ${contactForm.name} (${contactForm.email}).%0A%0A${contactForm.message}`;
-      window.location.href = `mailto:${targetEmail}?subject=Pesan dari Website Portofolio&body=${text}`;
-      
-      setContactSuccess(true);
-      setContactForm({ name: '', email: '', message: '' });
-      setContactLoading(false);
-      setTimeout(() => setContactSuccess(false), 5000);
-      return;
-    }
-
-    try {
-      // Jika memiliki Web3Forms Access Key, kirim secara diam-diam!
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          access_key: accessKey,
-          name: contactForm.name,
-          email: contactForm.email,
-          message: contactForm.message,
-          subject: `[Portofolio] Pesan Baru dari ${contactForm.name}`,
-          from_name: contactForm.name,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.success) {
-        setContactSuccess(true);
-        setContactForm({ name: '', email: '', message: '' });
-        setTimeout(() => setContactSuccess(false), 6000);
-      } else {
-        setContactError('Gagal mengirim pesan. Pastikan API Key valid.');
-      }
-    } catch (err) {
-      setContactError('Koneksi bermasalah. Periksa koneksi internet Anda.');
-    } finally {
-      setContactLoading(false);
-    }
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImagePreview(event.target.result);
-      setCommentForm(prev => ({ ...prev, image: event.target.result }));
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handlePostComment = (e) => {
-    e.preventDefault();
-    if (!commentForm.name || !commentForm.text) return;
-
-    const newComment = {
-      id: 'comment-' + Date.now(),
-      name: commentForm.name,
-      text: commentForm.text,
-      date: new Date().toISOString().split('T')[0],
-      image: commentForm.image,
-      hidden: false
-    };
-
-    updateField(['comments'], [newComment, ...(comments || [])]);
-    setCommentForm({ name: '', text: '', image: null });
-    setImagePreview(null);
-  };
-
-  const handleToggleHideComment = (commentId) => {
-    const updated = comments.map(c => c.id === commentId ? { ...c, hidden: !c.hidden } : c);
-    updateField(['comments'], updated);
-  };
-
-  const handleDeleteComment = (commentId) => {
-    if (!window.confirm('Hapus komentar ini?')) return;
-    const updated = comments.filter(c => c.id !== commentId);
-    updateField(['comments'], updated);
-  };
-
-  // Admin sees all comments (including hidden), visitors see only visible comments
-  const displayComments = isAdmin ? comments : comments.filter(c => !c.hidden);
+  // Gabungkan link sosmed dari data + email dari personal jika belum ada
+  const emailInSocials = socials.some(s => ['email', 'mail'].includes((s.icon || '').toLowerCase()));
+  const allLinks = [
+    ...socials,
+    ...(personal.email && !emailInSocials ? [{
+      name: 'Email',
+      handle: personal.email,
+      url: `mailto:${personal.email}`,
+      icon: 'email',
+    }] : []),
+  ];
 
   return (
-    <section id="contact" style={{
-      width: '100%',
-      maxWidth: '1400px',
-      margin: '0 auto',
-      padding: '96px 24px 120px',
-      color: '#FFFFFF'
-    }}>
-      {/* Title */}
-      <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-        <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, marginBottom: '12px' }}>
-          Contact Me
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto', fontSize: '15px' }}>
-          Have something in mind? Send a message and let's connect.
-        </p>
-      </div>
+    <section id="contact" style={{ padding: '100px 0 80px' }}>
+      <div style={{ maxWidth: '760px', margin: '0 auto', padding: '0 24px' }}>
 
-      {/* Grid Layout: Left Column (Form & Socials), Right Column (Comments) */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-        gap: '32px',
-        alignItems: 'start'
-      }}>
-        {/* LEFT COLUMN: Contact Form & Social Links */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          {/* Contact Form Card */}
-          <div className="glass-card" style={{ padding: '32px' }}>
-            <h3 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '8px' }}>
+        {/* Header */}
+        <Reveal>
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <span style={{
+              display: 'inline-block',
+              fontSize: '12px',
+              fontWeight: 600,
+              color: 'rgba(255,255,255,0.4)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              fontFamily: 'monospace',
+              marginBottom: '16px',
+            }}>
+              ✦ Let's Connect
+            </span>
+            <h2 style={{
+              fontSize: 'clamp(32px, 6vw, 52px)',
+              fontWeight: 800,
+              letterSpacing: '-0.03em',
+              color: '#fff',
+              lineHeight: 1.1,
+              marginBottom: '16px',
+            }}>
               Hubungi Saya
-            </h3>
-            <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '24px' }}>
-              Feel free to reach out if you want to collaborate, discuss ideas, or simply say hello.
+            </h2>
+            <p style={{
+              fontSize: '16px',
+              color: 'rgba(255,255,255,0.45)',
+              lineHeight: 1.7,
+              maxWidth: '480px',
+              margin: '0 auto',
+            }}>
+              Terbuka untuk peluang baru, kolaborasi, maupun sekadar bertukar cerita. Jangan ragu untuk menghubungi saya!
             </p>
+          </div>
+        </Reveal>
 
-            {/* Admin: Web3Forms Key Config Banner */}
-            {isAdmin && (
-              <div style={{
-                padding: '12px 16px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(251, 191, 36, 0.08)',
-                border: '1px solid rgba(251, 191, 36, 0.25)',
-                marginBottom: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                flexWrap: 'wrap'
-              }}>
-                <Bell size={14} style={{ color: '#FBBF24', flexShrink: 0 }} />
-                <span style={{ fontSize: '12px', color: '#FBBF24', fontWeight: 600 }}>Notifikasi Email</span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', flex: 1, minWidth: '120px' }}>
-                  {data.web3formsKey ? '✅ Access Key sudah diset' : '⚠️ Belum dikonfigurasi'}
-                </span>
-                <input
-                  type="text"
-                  placeholder="Paste Web3Forms Access Key..."
-                  className="glass-input"
-                  style={{ fontSize: '11px', padding: '6px 10px', flex: 2, minWidth: '180px' }}
-                  value={data.web3formsKey || ''}
-                  onChange={(e) => updateField(['web3formsKey'], e.target.value)}
-                />
-              </div>
-            )}
+        {/* Social Links Grid */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          {allLinks.map((soc, idx) => {
+            const gradient = getSocialGradient(soc.icon);
+            const href = (soc.icon || '').toLowerCase() === 'email' || (soc.icon || '').toLowerCase() === 'mail'
+              ? (soc.url.startsWith('mailto:') ? soc.url : `mailto:${soc.url}`)
+              : soc.url;
 
-            {/* Error Alert */}
-            {contactError && (
-              <div style={{
-                padding: '12px 16px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                marginBottom: '8px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '10px'
-              }}>
-                <AlertCircle size={16} style={{ color: '#EF4444', flexShrink: 0, marginTop: '1px' }} />
-                <span style={{ fontSize: '13px', color: '#EF4444' }}>{contactError}</span>
-              </div>
-            )}
-
-            {contactSuccess ? (
-              <div style={{
-                padding: '24px 20px',
-                borderRadius: '16px',
-                backgroundColor: 'rgba(16, 185, 129, 0.12)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
-                textAlign: 'center'
-              }}>
-                <div style={{
-                  width: '48px', height: '48px', borderRadius: '50%',
-                  background: 'rgba(16,185,129,0.2)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  margin: '0 auto 12px'
-                }}>
-                  <Check size={24} style={{ color: '#10B981' }} />
-                </div>
-                <p style={{ fontWeight: 700, fontSize: '16px', marginBottom: '6px' }}>Pesan Terkirim! 🎉</p>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Terima kasih telah menghubungi. Akan segera dibalas.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleContactSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ position: 'relative' }}>
-                  <User size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                  <input
-                    type="text"
-                    required
-                    placeholder="Your Name"
-                    className="glass-input"
-                    style={{ paddingLeft: '48px' }}
-                    value={contactForm.name}
-                    onChange={(e) => { setContactError(''); setContactForm({ ...contactForm, name: e.target.value }); }}
-                  />
-                </div>
-
-                <div style={{ position: 'relative' }}>
-                  <Mail size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                  <input
-                    type="email"
-                    required
-                    placeholder="Your Email"
-                    className="glass-input"
-                    style={{ paddingLeft: '48px' }}
-                    value={contactForm.email}
-                    onChange={(e) => { setContactError(''); setContactForm({ ...contactForm, email: e.target.value }); }}
-                  />
-                </div>
-
-                <div style={{ position: 'relative' }}>
-                  <MessageSquare size={18} style={{ position: 'absolute', left: '16px', top: '20px', color: 'var(--text-muted)' }} />
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Your Message"
-                    className="glass-input"
-                    style={{ paddingLeft: '48px', resize: 'none' }}
-                    value={contactForm.message}
-                    onChange={(e) => { setContactError(''); setContactForm({ ...contactForm, message: e.target.value }); }}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={contactLoading}
-                  className="glass-pill-container"
+            return (
+              <Reveal key={idx} delay={idx * 80}>
+                <a
+                  href={href}
+                  target={href.startsWith('mailto:') ? '_self' : '_blank'}
+                  rel="noopener noreferrer"
                   style={{
-                    padding: '14px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: contactLoading ? 'var(--text-muted)' : '#FFFFFF',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    cursor: contactLoading ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '20px',
+                    padding: '20px 24px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '20px',
+                    textDecoration: 'none',
+                    color: '#fff',
+                    transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.07)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)';
+                    e.currentTarget.style.transform = 'translateX(6px)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                    e.currentTarget.style.transform = 'translateX(0)';
+                  }}
+                >
+                  {/* Icon Box */}
+                  <div style={{
+                    width: '52px',
+                    height: '52px',
+                    borderRadius: '14px',
+                    background: gradient,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '8px',
-                    opacity: contactLoading ? 0.7 : 1,
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {contactLoading ? (
-                    <>
-                      <Loader size={15} style={{ animation: 'spin 1s linear infinite' }} />
-                      <span>Mengirim...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send size={15} />
-                      <span>Send Message</span>
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
+                    flexShrink: 0,
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                  }}>
+                    {getSocialIcon(soc.icon, 22)}
+                  </div>
 
-            {/* Social Links Sub-section */}
-            <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--border)' }}>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                Connect With Me
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {socials.map((soc, idx) => (
-                  <a
-                    key={idx}
-                    href={soc.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="glass-card"
-                    style={{
-                      padding: '12px 16px',
-                      borderRadius: '16px',
-                      textDecoration: 'none',
-                      color: '#FFFFFF',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <span style={{ fontSize: '14px', fontWeight: 600 }}>{soc.name}</span>
-                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{soc.handle}</span>
+                  {/* Text */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff', marginBottom: '3px' }}>
+                      {soc.name}
                     </div>
-                    <ArrowUpRight size={16} style={{ color: 'var(--text-muted)' }} />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: Interactive Comments System */}
-        <div className="glass-card" style={{ padding: '32px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '4px' }}>
-                Comments ({displayComments.length})
-              </h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-                Leave your thoughts here
-              </p>
-            </div>
-            {isAdmin && (
-              <span className="mono-tag" style={{ fontSize: '10px', color: '#10B981', borderColor: 'rgba(16,185,129,0.3)' }}>
-                ✦ Moderation Active
-              </span>
-            )}
-          </div>
-
-          {/* New Comment Input Form */}
-          <form onSubmit={handlePostComment} style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-            <input
-              type="text"
-              required
-              placeholder="Your Name"
-              className="glass-input"
-              value={commentForm.name}
-              onChange={(e) => setCommentForm({ ...commentForm, name: e.target.value })}
-            />
-
-            <textarea
-              rows={3}
-              required
-              placeholder="Your Comment"
-              className="glass-input"
-              style={{ resize: 'none' }}
-              value={commentForm.text}
-              onChange={(e) => setCommentForm({ ...commentForm, text: e.target.value })}
-            />
-
-            {/* Upload Image Optional */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <label
-                className="glass-input"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  padding: '10px 14px',
-                  width: 'auto',
-                  fontSize: '12px',
-                  color: 'var(--text-secondary)'
-                }}
-              >
-                <Upload size={14} />
-                <span>{imagePreview ? 'Gambar Terpilih' : 'Upload Image'}</span>
-                <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
-              </label>
-
-              {imagePreview && (
-                <img src={imagePreview} alt="Preview" style={{ width: '36px', height: '36px', borderRadius: '8px', objectFit: 'cover' }} />
-              )}
-            </div>
-
-            <button
-              type="submit"
-              className="glass-pill-container"
-              style={{
-                padding: '12px',
-                fontSize: '13px',
-                fontWeight: 600,
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                border: '1px solid rgba(255, 255, 255, 0.2)'
-              }}
-            >
-              Post Comment
-            </button>
-          </form>
-
-          {/* Scrollable Comments List */}
-          <div className="custom-scroll" style={{
-            flex: 1,
-            maxHeight: '380px',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            paddingRight: '4px'
-          }}>
-            {displayComments.length === 0 ? (
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center', padding: '24px 0' }}>
-                Belum ada komentar. Jadilah yang pertama memberi umpan balik!
-              </p>
-            ) : (
-              displayComments.map((cmt) => (
-                <div key={cmt.id} style={{
-                  padding: '14px 16px',
-                  borderRadius: '16px',
-                  backgroundColor: cmt.hidden ? 'rgba(239, 68, 68, 0.08)' : 'rgba(0, 0, 0, 0.3)',
-                  border: cmt.hidden ? '1px dashed rgba(239, 68, 68, 0.4)' : '1px solid var(--border)',
-                  opacity: cmt.hidden ? 0.75 : 1
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '13px', fontWeight: 600, color: '#FFFFFF' }}>{cmt.name}</span>
-                      {cmt.hidden && (
-                        <span style={{ fontSize: '10px', color: '#EF4444', background: 'rgba(239,68,68,0.2)', padding: '2px 6px', borderRadius: '4px' }}>
-                          Tersembunyi
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{cmt.date}</span>
-                      {/* Admin Quick Action Controls */}
-                      {isAdmin && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <button
-                            onClick={() => handleToggleHideComment(cmt.id)}
-                            title={cmt.hidden ? "Tampilkan komentar ke publik" : "Sembunyikan komentar dari publik"}
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              color: cmt.hidden ? '#10B981' : 'var(--text-muted)',
-                              cursor: 'pointer',
-                              padding: '2px'
-                            }}
-                          >
-                            {cmt.hidden ? <Eye size={14} /> : <EyeOff size={14} />}
-                          </button>
-                          <button
-                            onClick={() => handleDeleteComment(cmt.id)}
-                            title="Hapus komentar"
-                            style={{ background: 'transparent', border: 'none', color: '#EF4444', cursor: 'pointer', padding: '2px' }}
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      )}
+                    <div style={{
+                      fontSize: '13px',
+                      color: 'rgba(255,255,255,0.45)',
+                      fontFamily: 'monospace',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {soc.handle || soc.url}
                     </div>
                   </div>
-                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                    {cmt.text}
-                  </p>
-                  {cmt.image && (
-                    <img src={cmt.image} alt="User upload" style={{ marginTop: '10px', maxWidth: '100%', maxHeight: '160px', borderRadius: '8px', objectFit: 'cover' }} />
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
 
-      {/* Footer Copyright */}
-      <div style={{ marginTop: '80px', textAlign: 'center', fontSize: '12px', color: 'var(--text-muted)' }}>
-        © {new Date().getFullYear()} {personal.name || 'Mohammad Dava Setiawan'} — All rights reserved.
+                  {/* Arrow */}
+                  <ExternalLink size={18} style={{ color: 'rgba(255,255,255,0.25)', flexShrink: 0, transition: 'color 0.2s ease' }} />
+                </a>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <Reveal delay={400}>
+          <div style={{ textAlign: 'center', marginTop: '72px', paddingTop: '40px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.25)' }}>
+              © {new Date().getFullYear()} {personal.name || 'Dava Setiawan'} — All rights reserved.
+            </p>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

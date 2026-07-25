@@ -54,33 +54,21 @@
   "socials": [
     {
       "name": "LinkedIn",
-      "handle": "@linkedin",
-      "url": "https://www.linkedin.com/in/rifqimuhammadaliya/",
+      "handle": "Mohammad Dava Setiawan",
+      "url": "https://www.linkedin.com/in/davasetiawan/",
       "icon": "linkedin"
+    },
+    {
+      "name": "GitHub",
+      "handle": "@davasetiawan",
+      "url": "https://github.com/davasetiawan",
+      "icon": "github"
     },
     {
       "name": "Instagram",
       "handle": "@instagram",
-      "url": "https://www.instagram.com/itsmeikky_12",
+      "url": "https://www.instagram.com/",
       "icon": "instagram"
-    },
-    {
-      "name": "Youtube",
-      "handle": "@youtube",
-      "url": "https://youtube.com/@zettaajah",
-      "icon": "youtube"
-    },
-    {
-      "name": "Github",
-      "handle": "@github",
-      "url": "https://github.com/RifqiMuhammadAliya12",
-      "icon": "github"
-    },
-    {
-      "name": "TikTok",
-      "handle": "@tiktok",
-      "url": "https://www.tiktok.com/@itsme.ikky_",
-      "icon": "tiktok"
     }
   ],
   "projects": [
