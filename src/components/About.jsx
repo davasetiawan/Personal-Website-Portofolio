@@ -233,7 +233,7 @@ export const About = () => {
                   Fun Fact
                 </p>
                 <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.7' }}>
-                  Saya paling produktif saat ditemani kopi dan musik lo-fi. Clean code bukan hanya tentang fungsi—ini tentang keindahan!
+                  Saya  Fans Barca
                 </p>
               </div>
             </div>
