@@ -7,8 +7,34 @@ const API_BASE = typeof window !== 'undefined' && window.location.hostname === '
   ? 'http://localhost:3001'
   : '';
 
+const cleanUrl = (url) => {
+  if (typeof url === 'string' && url.includes('localhost:3001/uploads/')) {
+    return url.replace(/^https?:\/\/localhost:3001/, '');
+  }
+  return url;
+};
+
+const sanitizePortfolioData = (inputData) => {
+  if (!inputData) return inputData;
+  const copy = JSON.parse(JSON.stringify(inputData));
+  if (copy.personal?.avatar) copy.personal.avatar = cleanUrl(copy.personal.avatar);
+  if (Array.isArray(copy.projects)) {
+    copy.projects = copy.projects.map(p => ({
+      ...p,
+      image: cleanUrl(p.image)
+    }));
+  }
+  if (Array.isArray(copy.certificates)) {
+    copy.certificates = copy.certificates.map(c => ({
+      ...c,
+      image: cleanUrl(c.image)
+    }));
+  }
+  return copy;
+};
+
 export const PortfolioProvider = ({ children }) => {
-  const [data, setData] = useState(defaultData);
+  const [data, setData] = useState(() => sanitizePortfolioData(defaultData));
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [serverOnline, setServerOnline] = useState(false);
@@ -22,6 +48,16 @@ export const PortfolioProvider = ({ children }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const isInitialLoad = React.useRef(true);
+
+  // Clean stale localStorage entries containing hardcoded localhost URLs
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem('vercel_portfolio_custom_data_v3');
+      if (cached && cached.includes('http://localhost:3001')) {
+        localStorage.removeItem('vercel_portfolio_custom_data_v3');
+      }
+    } catch (e) {}
+  }, []);
 
   // Load data from server on mount
   useEffect(() => {
@@ -40,7 +76,7 @@ export const PortfolioProvider = ({ children }) => {
       .then(serverData => {
         // Hapus localStorage lama agar tidak menimpa data fresh dari server/file JSON
         try { localStorage.removeItem('vercel_portfolio_custom_data_v3'); } catch (e) {}
-        setData(serverData);
+        setData(sanitizePortfolioData(serverData));
         setServerOnline(true);
         setTimeout(() => {
           isInitialLoad.current = false;
@@ -141,7 +177,7 @@ export const PortfolioProvider = ({ children }) => {
         if (res.ok) {
           const result = await res.json();
           if (result.success) {
-            return `${API_BASE}${result.url}`;
+            return result.url;
           }
         }
       } catch (err) {
