@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { ArrowUpRight, Award, X, ZoomIn, ExternalLink } from 'lucide-react';
 import { getSkillLogoUrl } from '../utils/getSkillLogo';
-import { ensureAbsoluteUrl } from '../utils/urlHelper';
+import { ensureAbsoluteUrl, formatImageUrl } from '../utils/urlHelper';
 import { Reveal } from '../hooks/useScrollReveal';
 
 /* ============================================
@@ -296,14 +296,14 @@ export const Showcase = () => {
                   borderRadius: '20px', overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%',
                 }}>
                   {cert.image ? (
-                    <div style={{ width: '100%', height: '200px', overflow: 'hidden', position: 'relative', cursor: 'zoom-in', backgroundColor: 'rgba(0,0,0,0.4)' }}
+                    <div style={{ width: '100%', height: '210px', overflow: 'hidden', position: 'relative', cursor: 'zoom-in', backgroundColor: 'rgba(15,15,15,0.8)', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       onClick={() => setLightboxCert(cert)}>
-                      <img src={cert.image} alt={cert.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
-                        onMouseEnter={e => { e.target.style.transform = 'scale(1.05)'; }}
+                      <img src={formatImageUrl(cert.image)} alt={cert.title}
+                        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '8px', transition: 'transform 0.4s ease' }}
+                        onMouseEnter={e => { e.target.style.transform = 'scale(1.03)'; }}
                         onMouseLeave={e => { e.target.style.transform = 'scale(1)'; }}
                       />
-                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0)', transition: 'all 0.2s ease' }}
+                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0)', transition: 'all 0.2s ease', borderRadius: '8px' }}
                         onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.4)'; e.currentTarget.style.color = '#fff'; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0)'; }}>
                         <ZoomIn size={32} />
@@ -344,7 +344,7 @@ export const Showcase = () => {
               </Reveal>
             ))}
           </div>
-          {lightboxCert && <CertLightbox src={lightboxCert.image} title={lightboxCert.title} onClose={() => setLightboxCert(null)} />}
+          {lightboxCert && <CertLightbox src={formatImageUrl(lightboxCert.image)} title={lightboxCert.title} onClose={() => setLightboxCert(null)} />}
         </>
       )}
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
+import { formatImageUrl } from '../utils/urlHelper';
 import {
   X, Save, RotateCcw, Download, Upload, Plus, Trash2, Code, User, UserCheck,
   Folder, Award, Share2, Cpu, Image as ImageIcon, MapPin, MessageSquare, Eye, EyeOff
@@ -664,8 +665,8 @@ export const EditDrawer = () => {
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       {cert.image ? (
-                        <img src={cert.image} alt="cert" style={{
-                          width: '80px', height: '56px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)'
+                        <img src={formatImageUrl(cert.image)} alt="cert" style={{
+                          width: '80px', height: '56px', objectFit: 'contain', backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)'
                         }} onError={(e) => { e.target.style.display='none'; }} />
                       ) : (
                         <div style={{

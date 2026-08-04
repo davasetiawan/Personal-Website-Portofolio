@@ -12,3 +12,14 @@ export const ensureAbsoluteUrl = (url) => {
   }
   return `https://${trimmed}`;
 };
+
+export const formatImageUrl = (url) => {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (trimmed.startsWith('/uploads/')) {
+    if (typeof window !== 'undefined' && window.location.hostname === 'localhost' && window.location.port !== '3001') {
+      return `http://localhost:3001${trimmed}`;
+    }
+  }
+  return trimmed;
+};
